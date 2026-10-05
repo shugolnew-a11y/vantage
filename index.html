@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280"> <!-- فرض عرض الكمبيوتر حتى على الجوال لمنع أي إعادة ترتيب للعناصر -->
+    <meta name="viewport" content="width=1350"> <!-- عرض مثالي يحافظ على نسخة الكمبيوتر ويكون متناسقاً على الأجهزة -->
     <title>Vantage - Architecture & Design</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -166,7 +166,7 @@
             cursor: pointer;
         }
         .neu-btn-small:hover {
-            box-shadow: inset 2px 2px 5px #d0d0d0, -2px -2px 5px #ffffff;
+            box-shadow: inset 2px 2px 5px #d0d0d0, inset -2px -2px 5px #ffffff;
             color: #fb5c3a;
         }
 
@@ -227,7 +227,7 @@
         .neu-img-option input:checked + .content-wrapper img { border-color: #fb5c3a; opacity: 0.9; }
     </style>
 </head>
-<body class="bg-[#ebebeb] text-gray-900 font-arabic min-h-screen relative overflow-x-auto" style="min-width: 1280px;">
+<body class="bg-[#ebebeb] text-gray-900 font-arabic min-h-screen relative overflow-x-auto" style="min-width: 1350px;">
 
     <div class="bg-pattern-overlay"></div>
 
@@ -243,90 +243,61 @@
             
             <!-- الهيدر بنفس ترتيب الكمبيوتر تماماً -->
             <header class="flex flex-row justify-between items-center pb-6 border-b border-gray-300/60">
-                <!-- Left: Logo & Search -->
                 <div class="flex items-center gap-6 w-1/3 justify-start">
                     <img src="logo2.png" alt="Vantage Logo" class="h-7 object-contain">
-                    
                     <div class="relative w-56">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
                         <input type="text" placeholder="" class="block w-full pl-10 pr-3 py-1.5 border border-[#d0d0d0] rounded-full leading-5 bg-[#ebebeb] shadow-[inset_3px_3px_6px_#d0d0d0,inset_-3px_-3px_6px_#ffffff] text-gray-900 placeholder-gray-500 focus:outline-none text-sm transition-colors">
                     </div>
                 </div>
 
-                <!-- Center: Title -->
                 <div class="flex w-1/3 justify-center text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">
                     Beyond Space
                 </div>
 
-                <!-- Right: Nav & Menu -->
                 <nav class="flex items-center gap-6 w-1/3 justify-end text-sm font-semibold tracking-widest text-gray-800">
                     <a href="#" class="hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
-                    
                     <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-2" dir="rtl">تسجيل الدخول</button>
                     <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-2 hidden !text-brand-red" dir="rtl">تسجيل الخروج</button>
-                    
                     <button class="p-1 hover:text-brand-accent rounded-full transition-colors focus:outline-none cursor-pointer">
-                        <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                            <circle cx="5" cy="12" r="1.5"></circle>
-                            <circle cx="12" cy="12" r="1.5"></circle>
-                            <circle cx="19" cy="12" r="1.5"></circle>
-                        </svg>
+                        <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
                     </button>
                 </nav>
             </header>
 
             <main class="mt-16 flex flex-row items-center relative">
-                
-                <!-- Left Side: Vertical Text & Star -->
                 <div class="w-5/12 flex items-center relative min-h-[500px]">
-                    
-                    <!-- Rotated Text -->
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-20">
                         <div class="vertical-text flex flex-row items-center gap-2">
                             <span class="text-xs tracking-[0.4em] text-gray-500 font-medium font-heading">WHERE IDEAS BECOME</span>
                             <span class="text-lg tracking-[0.3em] font-extrabold text-gray-900 ml-2 font-heading">ARCHITECTURE</span>
                         </div>
                     </div>
-
-                    <!-- Star Logo -->
                     <div class="w-full flex justify-center pl-12 relative z-10">
                         <img src="logo.png" alt="Vantage Star" class="w-3/4 max-w-[320px] object-contain drop-shadow-md transform hover:rotate-3 transition-transform duration-700">
                     </div>
                 </div>
-
-                <!-- Right Side: Red Block & Hand Image -->
                 <div class="w-7/12 relative flex flex-col items-start">
-                    
-                    <!-- The Huge Red Block Background -->
                     <div class="absolute top-1/2 -translate-y-1/2 left-0 w-[150%] h-64 bg-brand-red z-0"></div>
-
-                    <!-- Hand Overlapping -->
                     <div class="relative z-10 w-full flex justify-start pl-10">
                         <img src="hand-ruler.png" alt="Hand with architectural ruler" class="w-full max-w-[450px] object-contain drop-shadow-2xl mix-blend-multiply">
                     </div>
-
-                    <!-- Title below -->
                     <div class="relative z-10 mt-6 text-left pl-10">
-                        <h1 class="text-5xl font-bold text-gray-900 leading-tight">
-                            We Design Beyond <br/> Boundaries
-                        </h1>
+                        <h1 class="text-5xl font-bold text-gray-900 leading-tight">We Design Beyond <br/> Boundaries</h1>
                     </div>
                 </div>
             </main>
         </div>
 
-        <!-- فاصل أنيق -->
         <div class="w-full flex items-center justify-center py-4">
             <div class="w-full max-w-6xl h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent relative">
                 <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-accent"></div>
             </div>
         </div>
 
-        <!-- شريط التنقل العلوي Neumorphism (أفقي تماماً كالكمبيوتر) -->
+        <!-- شريط التنقل العلوي Neumorphism أفقي تماماً -->
         <div class="w-full py-12 bg-transparent relative z-30 flex flex-col items-center" dir="rtl">
             <div class="neumorphic-out flex flex-row justify-center items-center gap-4 max-w-fit mx-auto">
                 <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-xl">ماذا نقدم</a>
@@ -337,17 +308,13 @@
             </div>
         </div>
 
-        <!-- قسم "ماذا نقدم" -->
         <section id="what-we-offer" class="w-full bg-[#ebebeb] relative z-20 overflow-hidden pb-10 scroll-mt-10" dir="rtl">
             <img src="what-we-offer.png" alt="ماذا نقدم" class="w-full h-auto block object-cover">
         </section>
 
         <!-- قسم "أعمالنا" -->
         <section id="our-works" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
-            <div class="w-full mb-16">
-                <img src="amalna-banner.png" alt="أعمالنا" class="w-full h-auto block object-cover">
-            </div>
-            
+            <div class="w-full mb-16"><img src="amalna-banner.png" alt="أعمالنا" class="w-full h-auto block object-cover"></div>
             <div class="max-w-[1440px] mx-auto px-12">
                 <div class="text-center mb-8"><p class="text-gray-500 text-lg">اختر القسم لمشاهدة أعمالنا</p></div>
                 <div class="grid grid-cols-3 gap-12 mt-16 pt-12">
@@ -373,7 +340,7 @@
             </div>
         </section>
 
-        <div class="w-full flex items-center justify-center py-4 bg-[#ebebeb]" dir="rtl">
+        <div class="w-full flex items-center justify-center py-4 bg-[#ebebeb]">
             <div class="w-full max-w-6xl h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent relative">
                 <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-accent"></div>
             </div>
@@ -446,7 +413,7 @@
     </div>
 
     <!-- نافذة الأقسام -->
-    <div id="category-works-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl" style="min-width: 1280px;">
+    <div id="category-works-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl" style="min-width: 1350px;">
         <div class="max-w-[1440px] mx-auto px-12">
             <div class="flex justify-between items-center mb-10">
                 <button onclick="closeCategoryView()" class="neu-button text-[#142e47] px-6 py-3 text-sm">العودة</button>
@@ -461,20 +428,154 @@
         </div>
     </div>
 
-    <!-- نافذة المطبخ -->
-    <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl" style="min-width: 1280px;">
+    <!-- نافذة تصميم المطبخ (مكتملة بجميع الأسئلة والمراحل الخمس) -->
+    <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12 bg-[#ebebeb]" dir="rtl" style="min-width: 1350px;">
         <div class="max-w-[1000px] mx-auto px-6">
             <div class="mb-10"><button onclick="closeKitchenDesign()" class="neu-button text-[#142e47] px-6 py-3 text-sm">العودة للرئيسية</button></div>
-            <div class="text-center mb-12"><h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">متطلبات تصميم مطبخك</h2></div>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">متطلبات تصميم مطبخك</h2>
+                <p class="text-gray-500">الرجاء تعبئة الخيارات التالية لنتمكن من بناء تصور دقيق ومخصص لك.</p>
+            </div>
+            
             <form class="space-y-16 pb-20">
+                <!-- المرحلة الأولى -->
                 <div class="neumorphic-card p-10">
-                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الأولى: التخطيط</h3>
-                    <div class="grid grid-cols-4 gap-4 neu-img-option text-sm">
-                        <label><input type="radio" name="kitchen_layout" value="L"><div class="content-wrapper"><img src="5ad301d4665ce9039aaeb4639157457e.jpg"><span>مطبخ حرف L</span></div></label>
-                        <label><input type="radio" name="kitchen_layout" value="U"><div class="content-wrapper"><img src="0a1b63ea8e360ffc24a902a94ea0a32c.jpg"><span>مطبخ حرف U</span></div></label>
-                        <label><input type="radio" name="kitchen_layout" value="straight"><div class="content-wrapper"><img src="e4bd5ee3eab8c5aae2e7d36f48f831a5.jpg"><span>خط مستقيم</span></div></label>
-                        <label><input type="radio" name="kitchen_layout" value="island"><div class="content-wrapper"><img src="2c8dfbe63f3a87a15bd0c582b413fa3b.jpg"><span>جزيرة وسطية</span></div></label>
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الأولى: معلومات المساحة والتخطيط</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">أبعاد المطبخ التقريبية</label>
+                            <div class="grid grid-cols-2 gap-6">
+                                <input type="number" placeholder="الطول (بالمتر)" class="neu-input">
+                                <input type="number" placeholder="العرض (بالمتر)" class="neu-input">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع المطبخ معمارياً</label>
+                            <div class="grid grid-cols-2 gap-4 neu-option">
+                                <label><input type="radio" name="kitchen_type" value="open"><span>مفتوح على الصالة</span></label>
+                                <label><input type="radio" name="kitchen_type" value="closed"><span>مساحة مغلقة ومستقلة</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">التوزيع والشكل المفضل</label>
+                            <div class="grid grid-cols-4 gap-4 neu-img-option text-sm">
+                                <label><input type="radio" name="kitchen_layout" value="L"><div class="content-wrapper"><img src="5ad301d4665ce9039aaeb4639157457e.jpg"><span>مطبخ حرف L</span></div></label>
+                                <label><input type="radio" name="kitchen_layout" value="U"><div class="content-wrapper"><img src="0a1b63ea8e360ffc24a902a94ea0a32c.jpg"><span>مطبخ حرف U</span></div></label>
+                                <label><input type="radio" name="kitchen_layout" value="straight"><div class="content-wrapper"><img src="e4bd5ee3eab8c5aae2e7d36f48f831a5.jpg"><span>خط مستقيم</span></div></label>
+                                <label><input type="radio" name="kitchen_layout" value="island"><div class="content-wrapper"><img src="2c8dfbe63f3a87a15bd0c582b413fa3b.jpg"><span>جزيرة وسطية</span></div></label>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- المرحلة الثانية -->
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثانية: النمط الجمالي</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">طراز التصميم المفضل</label>
+                            <div class="grid grid-cols-5 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="style" value="modern"><span>مودرن</span></label>
+                                <label><input type="radio" name="style" value="classic"><span>كلاسيك</span></label>
+                                <label><input type="radio" name="style" value="neoclassic"><span>نيوكلاسيك</span></label>
+                                <label><input type="radio" name="style" value="industrial"><span>صناعي</span></label>
+                                <label><input type="radio" name="style" value="rustic"><span>ريفي</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">الألوان المفضلة للدواليب</label>
+                            <div class="grid grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="color" value="light"><span>فاتحة</span></label>
+                                <label><input type="radio" name="color" value="dark"><span>داكنة</span></label>
+                                <label><input type="radio" name="color" value="mixed"><span>دمج لونين</span></label>
+                                <label><input type="radio" name="color" value="custom"><span>تحديد لون خاص</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الثالثة -->
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثالثة: الخامات والتشطيبات الأساسية</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الصاج (للدرف الخارجية)</label>
+                            <div class="grid grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="saj" value="normal"><span>ألمنيوم عادي</span></label>
+                                <label><input type="radio" name="saj" value="double"><span>صاج دبل</span></label>
+                                <label><input type="radio" name="saj" value="cladding"><span>كلادينج</span></label>
+                                <label><input type="radio" name="saj" value="wood"><span>شرائح خشابي</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الفيبر وشكله</label>
+                            <div class="grid grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="fiber" value="plain"><span>سادة</span></label>
+                                <label><input type="radio" name="fiber" value="pattern"><span>منقوش/محفور</span></label>
+                                <label><input type="radio" name="fiber" value="glossy"><span>لامع Glossy</span></label>
+                                <label><input type="radio" name="fiber" value="matte"><span>مطفي Matte</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الرخام (أسطح العمل)</label>
+                            <div class="grid grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="marble" value="natural"><span>طبيعي</span></label>
+                                <label><input type="radio" name="marble" value="granite"><span>جرانيت</span></label>
+                                <label><input type="radio" name="marble" value="quartz"><span>كوارتز</span></label>
+                                <label><input type="radio" name="marble" value="porcelain"><span>بورسلان</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الرابعة -->
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الرابعة: الإكسسوارات والوظائف العملية</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نظام المقابض</label>
+                            <div class="grid grid-cols-3 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="handles" value="visible"><span>مقابض بارزة</span></label>
+                                <label><input type="radio" name="handles" value="hidden"><span>مخفية Profile</span></label>
+                                <label><input type="radio" name="handles" value="push"><span>نظام الضغط Push</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">حلول التخزين الذكية</label>
+                            <div class="grid grid-cols-3 gap-4 neu-option text-sm">
+                                <label><input type="checkbox" name="storage1"><span>منظمات أدراج</span></label>
+                                <label><input type="checkbox" name="storage2"><span>زاوية سحرية</span></label>
+                                <label><input type="checkbox" name="storage3"><span>دواليب المؤن Pantry</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الخامسة -->
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الخامسة: الأجهزة الكهربائية والتمديدات</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">طبيعة الأجهزة الكهربائية</label>
+                            <div class="grid grid-cols-2 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="app_type" value="builtin"><span>مدمجة (Built-in)</span></label>
+                                <label><input type="radio" name="app_type" value="free"><span>منفصلة (Freestanding)</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع حوض الغسيل (المجلى)</label>
+                            <div class="grid grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="sink" value="single"><span>حوض واحد واسع</span></label>
+                                <label><input type="radio" name="sink" value="double"><span>حوضين</span></label>
+                                <label><input type="radio" name="sink" value="steel"><span>استيل</span></label>
+                                <label><input type="radio" name="sink" value="granite"><span>جرانيت</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-10">
+                    <button type="button" onclick="alert('تم إرسال متطلبات المطبخ بنجاح!')" class="neu-button !text-brand-accent !px-16 !py-4 text-xl">إرسال الطلب</button>
                 </div>
             </form>
         </div>
