@@ -226,7 +226,7 @@
         .neu-img-option img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; border: 2px solid transparent; transition: all 0.3s ease; }
         .neu-img-option input:checked + .content-wrapper img { border-color: #fb5c3a; opacity: 0.9; }
 
-        /* إخفاء شريط التمرير الأفقي للأقسام العلوية في الجوال */
+        /* إخفاء شريط التمرير الأفقي لشريط الأقسام في الجوال ليبقى كشريط كمبيوتر متناسق */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -245,9 +245,9 @@
     <div id="main-view">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-12 pt-6 pb-12 relative z-10" dir="ltr">
             
-            <!-- الهيدر -->
-            <header class="flex flex-row justify-between items-center pb-6 border-b border-gray-300/60">
-                <div class="flex items-center gap-2 sm:gap-6 w-1/3 justify-start">
+            <!-- الهيدر المخصص ليكون بنمط الكمبيوتر حتى في الجوال -->
+            <header class="flex flex-row justify-between items-center pb-6 border-b border-gray-300/60 w-full">
+                <div class="flex items-center gap-4 sm:gap-6 w-1/3 justify-start">
                     <img src="logo2.png" alt="Vantage Logo" class="h-6 sm:h-7 object-contain">
                     <div class="relative hidden sm:block w-56">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -257,11 +257,11 @@
                     </div>
                 </div>
 
-                <div class="flex w-1/3 justify-center text-xs sm:text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">
+                <div class="flex w-1/3 justify-center text-xs sm:text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading whitespace-nowrap">
                     Beyond Space
                 </div>
 
-                <nav class="flex items-center gap-2 sm:gap-6 w-1/3 justify-end text-sm font-semibold tracking-widest text-gray-800">
+                <nav class="flex items-center gap-3 sm:gap-6 w-1/3 justify-end text-xs sm:text-sm font-semibold tracking-widest text-gray-800">
                     <a href="#" class="hidden lg:block hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
                     <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-9 sm:!h-10 !px-3 sm:!px-4 !text-xs" dir="rtl">تسجيل الدخول</button>
                     <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-9 sm:!h-10 !px-3 sm:!px-4 !text-xs hidden !text-brand-red" dir="rtl">خروج</button>
@@ -301,7 +301,7 @@
             </div>
         </div>
 
-        <!-- شريط التنقل العلوي Neumorphism (أفقي مع دعم التمرير بالسحب للجوال) -->
+        <!-- شريط التنقل العلوي Neumorphic (أفقي بنمط الكمبيوتر الدقيق مع إمكانية السحب الأنيق في الشاشات الصغيرة) -->
         <div class="w-full py-8 lg:py-12 bg-transparent relative z-30 flex flex-col items-center px-4" dir="rtl">
             <div class="neumorphic-out flex flex-row justify-start lg:justify-center items-center gap-3 lg:gap-4 overflow-x-auto hide-scrollbar w-full lg:w-fit px-4 py-2">
                 <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-lg lg:text-xl shrink-0">ماذا نقدم</a>
@@ -316,7 +316,7 @@
             <img src="what-we-offer.png" alt="ماذا نقدم" class="w-full h-auto block object-cover">
         </section>
 
-        <!-- قسم "أعمالنا" (صندوقين في السطر للجوال، وثلاثة للكمبيوتر) -->
+        <!-- قسم "أعمالنا" (صندوقين في السطر للجوال) -->
         <section id="our-works" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
             <div class="w-full mb-16"><img src="amalna-banner.png" alt="أعمالنا" class="w-full h-auto block object-cover"></div>
             <div class="max-w-[1440px] mx-auto px-4 sm:px-12">
@@ -350,7 +350,7 @@
             </div>
         </div>
 
-        <!-- قسم مساحتك (صندوقين في السطر للجوال، وثلاثة للكمبيوتر) -->
+        <!-- قسم مساحتك (صندوقين في السطر للجوال) -->
         <section id="your-space" class="w-full bg-[#ebebeb] py-20 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
             <div class="max-w-[1200px] mx-auto px-4 sm:px-12 text-center">
                 <h2 class="text-4xl sm:text-5xl font-bold text-[#142e47] mb-6 font-heading tracking-wide">مساحتك</h2>
@@ -432,7 +432,7 @@
         </div>
     </div>
 
-    <!-- نافذة تصميم المطبخ (متجاوبة ومضبوطة بقياس مناسب للجوال والكمبيوتر) -->
+    <!-- نافذة تصميم المطبخ (مكتملة بجميع الأسئلة والمراحل الخمس) -->
     <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12 bg-[#ebebeb]" dir="rtl">
         <div class="max-w-[1000px] mx-auto px-4 sm:px-6">
             <div class="mb-10"><button onclick="closeKitchenDesign()" class="neu-button text-[#142e47] px-6 py-3 text-sm">العودة للرئيسية</button></div>
