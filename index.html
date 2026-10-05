@@ -84,6 +84,7 @@
             padding: 12px;
         }
 
+        /* تعديلات التجاوب للأزرار (تصغير في الجوال) */
         .nav-btn, .neu-button {
             background-color: #ebebeb !important;
             border: none;
@@ -94,14 +95,23 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 30px;
-            height: 52px;
-            min-width: 155px;
+            padding: 8px 16px;
+            height: 42px;
+            min-width: 100px;
+            white-space: nowrap;
             text-decoration: none;
             border-radius: 40px;
             box-shadow: 5px 5px 10px #d0d0d0, -5px -5px 10px #ffffff;
             transition: all 0.3s ease;
             cursor: pointer;
+        }
+
+        @media (min-width: 640px) {
+            .nav-btn, .neu-button {
+                padding: 10px 30px;
+                height: 52px;
+                min-width: 155px;
+            }
         }
 
         .nav-btn:hover, .neu-button:hover:not(:disabled) {
@@ -153,7 +163,6 @@
             box-shadow: inset 6px 6px 12px #c5c5c5, inset -6px -6px 12px #ffffff;
         }
 
-        /* أزرار التحكم الصغيرة (تعديل/حذف) */
         .neu-btn-small {
             background-color: #ebebeb;
             border-radius: 50%;
@@ -171,14 +180,16 @@
             color: #fb5c3a;
         }
 
-        /* رسالة التنبيه (Toast) */
+        /* إخفاء شريط التمرير الأفقي في الجوال لشريط الأقسام */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         .toast-enter { animation: slideUp 0.5s forwards; }
         .toast-exit { animation: fadeOut 0.5s forwards; }
 
         @keyframes slideUp { from { bottom: -50px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
         @keyframes fadeOut { from { bottom: 40px; opacity: 1; } to { bottom: 40px; opacity: 0; } }
         
-        /* مؤشر التحميل (Spinner) */
         .spinner {
             border: 3px solid rgba(251, 92, 58, 0.3);
             border-radius: 50%;
@@ -242,24 +253,28 @@
     <!-- حاوية الصفحة الرئيسية -->
     <div id="main-view">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 pt-6 pb-12 relative z-10" dir="ltr">
-            <header class="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-6 border-b border-gray-300/60">
-                <div class="flex items-center gap-6 w-full md:w-1/3 justify-between md:justify-start">
-                    <img src="logo2.png" alt="Vantage Logo" class="h-7 object-contain">
-                    <div class="relative hidden sm:block w-56">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        </div>
-                        <input type="text" placeholder="" class="block w-full pl-10 pr-3 py-1.5 border border-[#d0d0d0] rounded-full leading-5 bg-[#ebebeb] shadow-[inset_3px_3px_6px_#d0d0d0,inset_-3px_-3px_6px_#ffffff] text-gray-900 placeholder-gray-500 focus:outline-none sm:text-sm transition-colors">
-                    </div>
+            
+            <!-- الهيدر المحدث ليكون سطر واحد دائماً -->
+            <header class="flex flex-row justify-between items-center pb-4 sm:pb-6 border-b border-gray-300/60 w-full">
+                <!-- الشعار -->
+                <div class="flex items-center">
+                    <img src="logo2.png" alt="Vantage Logo" class="h-6 sm:h-7 object-contain">
                 </div>
-                <div class="hidden md:flex w-1/3 justify-center text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">Beyond Space</div>
-                <nav class="flex items-center gap-4 w-full md:w-1/3 justify-center md:justify-end text-sm font-semibold tracking-widest text-gray-800">
-                    <a href="#" class="hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
-                    <!-- تعديل زر الدخول ليكون بمسمى عام -->
-                    <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-4" dir="rtl">تسجيل الدخول</button>
-                    <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-4 hidden !text-brand-red" dir="rtl">تسجيل الخروج</button>
+                
+                <!-- العنوان (يختفي في الجوال الصغير لتوفير المساحة) -->
+                <div class="hidden md:flex justify-center text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">
+                    Beyond Space
+                </div>
+                
+                <!-- الأزرار والقائمة -->
+                <nav class="flex items-center gap-2 sm:gap-4 justify-end text-xs sm:text-sm font-semibold tracking-widest text-gray-800">
+                    <a href="#" class="hidden sm:block hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
+                    
+                    <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-8 sm:!h-10 !px-3 sm:!px-4 !text-[11px] sm:!text-xs" dir="rtl">تسجيل الدخول</button>
+                    <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-8 sm:!h-10 !px-3 sm:!px-4 !text-[11px] sm:!text-xs hidden !text-brand-red" dir="rtl">تسجيل الخروج</button>
+                    
                     <button class="p-1 hover:text-brand-accent rounded-full transition-colors focus:outline-none cursor-pointer">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
                     </button>
                 </nav>
             </header>
@@ -294,14 +309,14 @@
             </div>
         </div>
 
-        <!-- شريط التنقل العلوي -->
-        <div class="w-full py-12 bg-transparent relative z-30 flex flex-col items-center" dir="rtl">
-            <div class="neumorphic-out flex flex-wrap justify-center items-center gap-4 max-w-fit mx-auto">
-                <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-lg sm:text-xl">ماذا نقدم</a>
-                <a href="#our-works" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">أعمالنا</a>
-                <a href="#your-space" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl text-brand-accent">مساحتك</a>
-                <a href="#services" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">الخدمات</a>
-                <a href="#contact" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">تواصل معنا</a>
+        <!-- شريط التنقل العلوي للأقسام (محدث ليدعم التمرير الأفقي في الجوال) -->
+        <div class="w-full py-8 sm:py-12 bg-transparent relative z-30 flex flex-col items-center px-4" dir="rtl">
+            <div class="neumorphic-out flex flex-row justify-start sm:justify-center items-center gap-3 sm:gap-4 overflow-x-auto hide-scrollbar w-full sm:w-fit px-4 py-2">
+                <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-sm sm:text-xl shrink-0">ماذا نقدم</a>
+                <a href="#our-works" onclick="setActiveNav(this)" class="nav-btn text-sm sm:text-xl shrink-0">أعمالنا</a>
+                <a href="#your-space" onclick="setActiveNav(this)" class="nav-btn text-sm sm:text-xl text-brand-accent shrink-0">مساحتك</a>
+                <a href="#services" onclick="setActiveNav(this)" class="nav-btn text-sm sm:text-xl shrink-0">الخدمات</a>
+                <a href="#contact" onclick="setActiveNav(this)" class="nav-btn text-sm sm:text-xl shrink-0">تواصل معنا</a>
             </div>
         </div>
 
@@ -867,7 +882,7 @@
                 closeLoginModal();
                 showToast('تم تسجيل الدخول بنجاح.');
             } catch (error) {
-                alert('خطأ من السيرفر: ' + error.message);
+                alert('البيانات غير صحيحة، يرجى المحاولة مرة أخرى.');
                 console.error(error);
             } finally {
                 btn.disabled = false; spinner.classList.add('hidden');
