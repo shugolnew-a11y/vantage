@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vantage - Architecture & Design</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- مكتبات Firebase الأساسية -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['IBM Plex Sans Arabic', 'sans-serif'],
+                        heading: ['Thmanyah Serif Display', 'IBM Plex Sans Arabic', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#f24848',
+                            accent: '#fb5c3a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @font-face {
+            font-family: 'Thmanyah Serif Display';
+            src: url('thmanyahserifdisplay-Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Thmanyah Serif Display';
+            src: url('thmanyahserifdisplay-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .bg-pattern-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('backgrawnd.jpg');
+            background-repeat: repeat;
+            background-size: 600px;
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+        
+        .force-transparent {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Thmanyah Serif Display', 'IBM Plex Sans Arabic', sans-serif !important;
+        }
+
+        /* --- تصميم Neumorphism --- */
+        .neumorphic-out {
+            background: #ebebeb;
+            border-radius: 60px;
+            box-shadow: 10px 10px 20px #d0d0d0, -10px -10px 20px #ffffff;
+            padding: 12px;
+        }
+
+        .nav-btn, .neu-button {
+            background-color: #ebebeb !important;
+            border: none;
+            outline: none;
+            color: #6b7280;
+            font-family: 'Thmanyah Serif Display', 'IBM Plex Sans Arabic', sans-serif !important;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 30px;
+            height: 52px;
+            min-width: 155px;
+            text-decoration: none;
+            border-radius: 40px;
+            box-shadow: 5px 5px 10px #d0d0d0, -5px -5px 10px #ffffff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover, .neu-button:hover:not(:disabled) {
+            color: #fb5c3a;
+            box-shadow: 3px 3px 6px #d0d0d0, -3px -3px 6px #ffffff;
+            transform: translateY(1px);
+        }
+
+        .nav-btn.active, .neu-button:active:not(:disabled) {
+            color: #142e47;
+            box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff;
+            transform: translateY(2px);
+        }
+        
+        .neu-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .neumorphic-card {
+            background: #ebebeb;
+            border-radius: 40px;
+            box-shadow: 15px 15px 30px #cccccc, -15px -15px 30px #ffffff;
+            transition: all 0.4s ease;
+        }
+        
+        .neumorphic-card.hover-effect:hover {
+            box-shadow: 20px 20px 40px #c5c5c5, -20px -20px 40px #ffffff;
+            transform: translateY(-5px);
+        }
+
+        .icon-circle {
+            background-color: #fb5c3a;
+            box-shadow: 8px 8px 16px #cccccc, -8px -8px 16px #ffffff;
+        }
+
+        .neu-input {
+            background-color: #ebebeb;
+            border-radius: 15px;
+            box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff;
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            width: 100%;
+            color: #142e47;
+            transition: all 0.3s ease;
+        }
+        .neu-input:focus {
+            box-shadow: inset 6px 6px 12px #c5c5c5, inset -6px -6px 12px #ffffff;
+        }
+
+        /* أزرار التحكم الصغيرة (تعديل/حذف) */
+        .neu-btn-small {
+            background-color: #ebebeb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 3px 3px 6px #d0d0d0, -3px -3px 6px #ffffff;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .neu-btn-small:hover {
+            box-shadow: inset 2px 2px 5px #d0d0d0, inset -2px -2px 5px #ffffff;
+            color: #fb5c3a;
+        }
+
+        /* رسالة التنبيه (Toast) */
+        .toast-enter { animation: slideUp 0.5s forwards; }
+        .toast-exit { animation: fadeOut 0.5s forwards; }
+
+        @keyframes slideUp { from { bottom: -50px; opacity: 0; } to { bottom: 40px; opacity: 1; } }
+        @keyframes fadeOut { from { bottom: 40px; opacity: 1; } to { bottom: 40px; opacity: 0; } }
+        
+        /* مؤشر التحميل (Spinner) */
+        .spinner {
+            border: 3px solid rgba(251, 92, 58, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fb5c3a;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .neu-upload-btn {
+            background-color: #ebebeb;
+            border-radius: 20px;
+            box-shadow: 5px 5px 10px #d0d0d0, -5px -5px 10px #ffffff;
+            padding: 15px 20px;
+            text-align: center;
+            color: #142e47;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        .neu-upload-btn:hover { color: #fb5c3a; box-shadow: 3px 3px 6px #d0d0d0, -3px -3px 6px #ffffff; }
+        .neu-upload-btn:active { box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff; }
+        
+        .neu-option input { display: none; }
+        .neu-option span {
+            display: block; background-color: #ebebeb; border-radius: 20px;
+            box-shadow: 5px 5px 10px #d0d0d0, -5px -5px 10px #ffffff;
+            padding: 15px 20px; text-align: center; color: #6b7280; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .neu-option span:hover { transform: translateY(-2px); }
+        .neu-option input:checked + span { box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff; color: #fb5c3a; transform: translateY(0); }
+
+        .neu-img-option input { display: none; }
+        .neu-img-option .content-wrapper {
+            display: flex; flex-direction: column; align-items: center; background-color: #ebebeb;
+            border-radius: 20px; box-shadow: 5px 5px 10px #d0d0d0, -5px -5px 10px #ffffff;
+            padding: 12px; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease; height: 100%;
+        }
+        .neu-img-option .content-wrapper:hover { transform: translateY(-2px); }
+        .neu-img-option input:checked + .content-wrapper { box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff; color: #fb5c3a; transform: translateY(0); }
+        .neu-img-option img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; border: 2px solid transparent; transition: all 0.3s ease; }
+        .neu-img-option input:checked + .content-wrapper img { border-color: #fb5c3a; opacity: 0.9; }
+    </style>
+</head>
+<body class="bg-[#ebebeb] text-gray-900 font-arabic min-h-screen relative overflow-x-hidden">
+
+    <div class="bg-pattern-overlay"></div>
+
+    <!-- رسالة التنبيه (Toast) -->
+    <div id="toast-message" class="hidden fixed bottom-10 left-1/2 transform -translate-x-1/2 neumorphic-card px-8 py-4 z-[200] flex items-center gap-3 border border-white/50">
+        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toast-text" class="text-[#142e47] font-bold"></span>
+    </div>
+
+    <!-- حاوية الصفحة الرئيسية -->
+    <div id="main-view">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 pt-6 pb-12 relative z-10" dir="ltr">
+            <header class="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-6 border-b border-gray-300/60">
+                <div class="flex items-center gap-6 w-full md:w-1/3 justify-between md:justify-start">
+                    <img src="logo2.png" alt="Vantage Logo" class="h-7 object-contain">
+                    <div class="relative hidden sm:block w-56">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <input type="text" placeholder="" class="block w-full pl-10 pr-3 py-1.5 border border-[#d0d0d0] rounded-full leading-5 bg-[#ebebeb] shadow-[inset_3px_3px_6px_#d0d0d0,inset_-3px_-3px_6px_#ffffff] text-gray-900 placeholder-gray-500 focus:outline-none sm:text-sm transition-colors">
+                    </div>
+                </div>
+                <div class="hidden md:flex w-1/3 justify-center text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">Beyond Space</div>
+                <nav class="flex items-center gap-4 w-full md:w-1/3 justify-center md:justify-end text-sm font-semibold tracking-widest text-gray-800">
+                    <a href="#" class="hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
+                    <!-- تعديل زر الدخول ليكون بمسمى عام -->
+                    <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-4" dir="rtl">تسجيل الدخول</button>
+                    <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-4 hidden !text-brand-red" dir="rtl">تسجيل الخروج</button>
+                    <button class="p-1 hover:text-brand-accent rounded-full transition-colors focus:outline-none cursor-pointer">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
+                    </button>
+                </nav>
+            </header>
+
+            <main class="mt-16 flex flex-col lg:flex-row items-center relative">
+                <div class="w-full lg:w-5/12 flex items-center relative min-h-[300px] lg:min-h-[500px]">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-20">
+                        <div class="vertical-text flex flex-row items-center gap-2">
+                            <span class="text-xs tracking-[0.4em] text-gray-500 font-medium font-heading">WHERE IDEAS BECOME</span>
+                            <span class="text-lg tracking-[0.3em] font-extrabold text-gray-900 ml-2 font-heading">ARCHITECTURE</span>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center pl-12 relative z-10">
+                        <img src="logo.png" alt="Vantage Star" class="w-3/4 max-w-[320px] object-contain drop-shadow-md transform hover:rotate-3 transition-transform duration-700">
+                    </div>
+                </div>
+                <div class="w-full lg:w-7/12 relative mt-16 lg:mt-0 flex flex-col items-center lg:items-start">
+                    <div class="absolute top-1/2 -translate-y-1/2 left-0 w-[150%] h-48 sm:h-64 bg-brand-red z-0"></div>
+                    <div class="relative z-10 w-full flex justify-center lg:justify-start lg:pl-10">
+                        <img src="hand-ruler.png" alt="Hand with architectural ruler" class="w-full max-w-[450px] object-contain drop-shadow-2xl mix-blend-multiply">
+                    </div>
+                    <div class="relative z-10 mt-8 lg:mt-6 text-center lg:text-left lg:pl-10">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">We Design Beyond <br/> Boundaries</h1>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div class="w-full flex items-center justify-center py-4">
+            <div class="w-full max-w-6xl h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent relative">
+                <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-accent"></div>
+            </div>
+        </div>
+
+        <!-- شريط التنقل العلوي -->
+        <div class="w-full py-12 bg-transparent relative z-30 flex flex-col items-center" dir="rtl">
+            <div class="neumorphic-out flex flex-wrap justify-center items-center gap-4 max-w-fit mx-auto">
+                <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-lg sm:text-xl">ماذا نقدم</a>
+                <a href="#our-works" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">أعمالنا</a>
+                <a href="#your-space" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl text-brand-accent">مساحتك</a>
+                <a href="#services" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">الخدمات</a>
+                <a href="#contact" onclick="setActiveNav(this)" class="nav-btn text-lg sm:text-xl">تواصل معنا</a>
+            </div>
+        </div>
+
+        <section id="what-we-offer" class="w-full bg-[#ebebeb] relative z-20 overflow-hidden pb-10 scroll-mt-10" dir="rtl">
+            <img src="what-we-offer.png" alt="ماذا نقدم" class="w-full h-auto block object-cover">
+        </section>
+
+        <!-- قسم "أعمالنا" -->
+        <section id="our-works" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
+            <div class="w-full mb-16"><img src="amalna-banner.png" alt="أعمالنا" class="w-full h-auto block object-cover"></div>
+            <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+                <div class="text-center mb-8"><p class="text-gray-500 text-lg">اختر القسم لمشاهدة أعمالنا</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-20 lg:gap-12 mt-16 pt-12">
+                    <div onclick="openCategoryView('kitchen', 'المطابخ')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="kitchen-icon.png" alt="المطابخ" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
+                        </div>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">المطابخ</h3>
+                    </div>
+                    <div onclick="openCategoryView('living', 'الغرف والمجالس')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="living-icon.png" alt="المجالس" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
+                        </div>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">الغرف والمجالس</h3>
+                    </div>
+                    <div onclick="openCategoryView('bedroom', 'غرف النوم')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="bedroom-icon.png" alt="غرف النوم" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
+                        </div>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">غرف النوم</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="w-full flex items-center justify-center py-4 bg-[#ebebeb]" dir="rtl"><div class="w-full max-w-6xl h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent relative"><div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-accent"></div></div></div>
+
+        <!-- قسم مساحتك -->
+        <section id="your-space" class="w-full bg-[#ebebeb] py-20 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
+            <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 text-center">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#142e47] mb-6 font-heading tracking-wide">مساحتك</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <button onclick="openKitchenDesign()" class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        </div>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مطبخ</span>
+                    </button>
+                    <!-- الأزرار الأخرى كأمثلة بصرية -->
+                    <button class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        </div>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم غرفة نوم</span>
+                    </button>
+                    <button class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مجلس</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- الخدمات -->
+        <section id="services" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
+            <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 text-center mb-12"><h2 class="text-3xl sm:text-4xl font-bold text-[#142e47] mb-4 font-heading">خدماتنا الهندسية</h2></div>
+            <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التصميم المعماري</h3><p class="text-gray-600 text-sm leading-relaxed">ابتكار تصاميم فريدة تلبي احتياجات العميل مع الحفاظ على الهوية العمرانية.</p></div>
+                <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التصميم الداخلي</h3><p class="text-gray-600 text-sm leading-relaxed">توزيع الفراغات وتنسيق الأثاث والألوان لخلق بيئة مريحة وجمالية.</p></div>
+                <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التخطيط الحضري</h3><p class="text-gray-600 text-sm leading-relaxed">تخطيط المدن والأحياء السكنية بما يضمن كفاءة البنية التحتية.</p></div>
+                <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">الإشراف الهندسي</h3><p class="text-gray-600 text-sm leading-relaxed">متابعة دقيقة لمراحل التنفيذ في الموقع لضمان مطابقة المخططات والمعايير.</p></div>
+            </div>
+        </section>
+
+        <!-- الفوتر (التذييل الكامل) -->
+        <footer id="contact" class="w-full bg-[#0b1724] text-white py-16 relative z-30 border-t border-gray-800 scroll-mt-10" dir="rtl">
+            <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-12 items-center text-center md:text-right">
+                
+                <div>
+                    <img src="logo2.png" alt="Vantage Logo" class="h-8 object-contain mb-4 mx-auto md:mx-0 brightness-0 invert">
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        جميع حقوق الملكية الفكرية والتصميمية محفوظة لشركة فانتج للهندسة والتصميم المعماري © 2026.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white font-heading">التواصل والدعم</h4>
+                    <p class="text-gray-400 text-sm mb-2">المكلا، فوة الإنشاءات، اليمن</p>
+                    <p class="text-gray-400 text-sm mb-2">البريد الإلكتروني: info@vantage-arch.com</p>
+                    <p class="text-gray-400 text-sm">هاتف: 00967XXXXXXXXX</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white font-heading">تابعنا على منصات التواصل</h4>
+                    <div class="flex justify-center md:justify-start gap-4">
+                        <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-red flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-red flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-red flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- واجهة عرض أعمال الأقسام (تفتح عند الضغط على كرت القسم) -->
+    <!-- ============================================== -->
+    <div id="category-works-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+            
+            <div class="flex justify-between items-center mb-10">
+                <button onclick="closeCategoryView()" class="neu-button text-[#142e47] px-6 py-3 text-sm">
+                    <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    العودة
+                </button>
+                
+                <!-- زر الإضافة للمدير فقط -->
+                <button id="btn-add-work-cat" onclick="openAddWorkModal()" class="neu-button hidden !text-brand-accent px-6 py-3 text-sm">
+                    <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    إضافة عمل جديد
+                </button>
+            </div>
+
+            <div class="text-center mb-12 border-b-2 border-brand-accent inline-block pb-4 mx-auto w-full max-w-sm">
+                <h2 id="category-title" class="text-4xl font-bold text-[#142e47] font-heading">أعمالنا</h2>
+            </div>
+
+            <!-- شبكة عرض الأعمال -->
+            <div id="category-works-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="col-span-full text-center py-20">
+                    <span class="spinner inline-block w-8 h-8"></span>
+                    <p class="mt-4 text-gray-500 font-semibold">جاري جلب الأعمال...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- واجهة صفحة تصميم المطبخ بالأسئلة الكاملة -->
+    <!-- ============================================== -->
+    <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl">
+        <div class="max-w-[1000px] mx-auto px-4 sm:px-6">
+            <div class="mb-10">
+                <button onclick="closeKitchenDesign()" class="neu-button text-[#142e47] px-6 py-3 text-sm">
+                    <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    العودة للرئيسية
+                </button>
+            </div>
+
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">متطلبات تصميم مطبخك</h2>
+                <p class="text-gray-500">الرجاء تعبئة الخيارات التالية لنتمكن من بناء تصور دقيق ومخصص لك.</p>
+            </div>
+
+            <form class="space-y-16 pb-20">
+                
+                <!-- المرحلة الأولى -->
+                <div class="neumorphic-card p-8 sm:p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الأولى: معلومات المساحة والتخطيط</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">أبعاد المطبخ التقريبية</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <input type="number" placeholder="الطول (بالمتر)" class="neu-input">
+                                <input type="number" placeholder="العرض (بالمتر)" class="neu-input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">رفع ملف أو صورة لمخطط المساحة</label>
+                            <label class="neu-upload-btn w-full sm:w-1/2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                <span>اختر ملفاً...</span>
+                                <input type="file" class="hidden">
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع المطبخ معمارياً</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 neu-option">
+                                <label><input type="radio" name="kitchen_type" value="open"><span>مفتوح على الصالة</span></label>
+                                <label><input type="radio" name="kitchen_type" value="closed"><span>مساحة مغلقة ومستقلة</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">التوزيع والشكل المفضل</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 neu-img-option text-sm">
+                                <label>
+                                    <input type="radio" name="kitchen_layout" value="L">
+                                    <div class="content-wrapper">
+                                        <img src="5ad301d4665ce9039aaeb4639157457e.jpg" alt="مطبخ بشكل حرف L">
+                                        <span class="mt-2">مطبخ حرف L</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="kitchen_layout" value="U">
+                                    <div class="content-wrapper">
+                                        <img src="0a1b63ea8e360ffc24a902a94ea0a32c.jpg" alt="مطبخ بشكل حرف U">
+                                        <span class="mt-2">مطبخ حرف U</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="kitchen_layout" value="straight">
+                                    <div class="content-wrapper">
+                                        <img src="e4bd5ee3eab8c5aae2e7d36f48f831a5.jpg" alt="مطبخ خط مستقيم">
+                                        <span class="mt-2">خط مستقيم</span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="kitchen_layout" value="island">
+                                    <div class="content-wrapper">
+                                        <img src="2c8dfbe63f3a87a15bd0c582b413fa3b.jpg" alt="مطبخ مع جزيرة">
+                                        <span class="mt-2">مع جزيرة وسطية</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">موقع النوافذ والأبواب</label>
+                            <textarea rows="3" placeholder="أضف ملاحظات لوصف أماكن التهوية والمداخل..." class="neu-input resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الثانية -->
+                <div class="neumorphic-card p-8 sm:p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثانية: النمط الجمالي</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">طراز التصميم المفضل</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="style" value="modern"><span>مودرن</span></label>
+                                <label><input type="radio" name="style" value="classic"><span>كلاسيك</span></label>
+                                <label><input type="radio" name="style" value="neoclassic"><span>نيوكلاسيك</span></label>
+                                <label><input type="radio" name="style" value="industrial"><span>صناعي</span></label>
+                                <label><input type="radio" name="style" value="rustic"><span>ريفي</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">الألوان المفضلة للدواليب</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="color" value="light"><span>فاتحة</span></label>
+                                <label><input type="radio" name="color" value="dark"><span>داكنة</span></label>
+                                <label><input type="radio" name="color" value="mixed"><span>دمج لونين</span></label>
+                                <label><input type="radio" name="color" value="custom"><span>تحديد لون خاص</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">الصور المرجعية (Moodboard)</label>
+                            <p class="text-sm text-gray-500 mb-4">ارفع صور لمطابخ نالت إعجابك</p>
+                            <label class="neu-upload-btn w-full sm:w-1/2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                <span>رفع الصور...</span>
+                                <input type="file" multiple class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الثالثة -->
+                <div class="neumorphic-card p-8 sm:p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثالثة: الخامات والتشطيبات</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الصاج (للدرف الخارجية)</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="saj" value="normal"><span>ألمنيوم عادي</span></label>
+                                <label><input type="radio" name="saj" value="double"><span>صاج دبل</span></label>
+                                <label><input type="radio" name="saj" value="cladding"><span>كلادينج</span></label>
+                                <label><input type="radio" name="saj" value="wood"><span>شرائح خشابي</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الفيبر وشكله</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="fiber" value="plain"><span>سادة</span></label>
+                                <label><input type="radio" name="fiber" value="pattern"><span>منقوش/محفور</span></label>
+                                <label><input type="radio" name="fiber" value="glossy"><span>لامع Glossy</span></label>
+                                <label><input type="radio" name="fiber" value="matte"><span>مطفي Matte</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع القطاع الداخلي (الهيكل)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="structure" value="alu"><span>ألمنيوم تيوب مجلفن</span></label>
+                                <label><input type="radio" name="structure" value="pvc"><span>PVC</span></label>
+                                <label><input type="radio" name="structure" value="wood"><span>خشب معالج ضد الرطوبة</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع الرخام (أسطح العمل)</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="marble" value="natural"><span>طبيعي</span></label>
+                                <label><input type="radio" name="marble" value="granite"><span>جرانيت</span></label>
+                                <label><input type="radio" name="marble" value="quartz"><span>كوارتز</span></label>
+                                <label><input type="radio" name="marble" value="porcelain"><span>بورسلان</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الرابعة -->
+                <div class="neumorphic-card p-8 sm:p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الرابعة: الإكسسوارات والوظائف العملية</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نظام المقابض</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="handles" value="visible"><span>مقابض بارزة</span></label>
+                                <label><input type="radio" name="handles" value="hidden"><span>مخفية Profile</span></label>
+                                <label><input type="radio" name="handles" value="push"><span>نظام الضغط Push</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">حلول التخزين الذكية (متعدد الخيارات)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 neu-option text-sm">
+                                <label><input type="checkbox" name="storage1"><span>منظمات أدراج</span></label>
+                                <label><input type="checkbox" name="storage2"><span>زاوية سحرية</span></label>
+                                <label><input type="checkbox" name="storage3"><span>دواليب المؤن Pantry</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">الإضاءة المدمجة (LED)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 neu-option text-sm">
+                                <label><input type="checkbox" name="light1"><span>تحت الخزائن العلوية</span></label>
+                                <label><input type="checkbox" name="light2"><span>داخل الأدراج</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الخامسة -->
+                <div class="neumorphic-card p-8 sm:p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الخامسة: الأجهزة الكهربائية والتمديدات</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">طبيعة الأجهزة الكهربائية</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="app_type" value="builtin"><span>مدمجة (Built-in)</span></label>
+                                <label><input type="radio" name="app_type" value="free"><span>منفصلة (Freestanding)</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">الأجهزة المطلوب توفير مساحة لها</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 neu-option text-sm">
+                                <label><input type="checkbox" name="app1"><span>ثلاجة مزدوجة</span></label>
+                                <label><input type="checkbox" name="app2"><span>غسالة صحون</span></label>
+                                <label><input type="checkbox" name="app3"><span>ميكروويف</span></label>
+                                <label><input type="checkbox" name="app4"><span>فرن سطحي</span></label>
+                                <label><input type="checkbox" name="app5"><span>شفاط هواء</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#142e47] font-semibold mb-4">نوع حوض الغسيل (المجلى)</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
+                                <label><input type="radio" name="sink" value="single"><span>حوض واحد واسع</span></label>
+                                <label><input type="radio" name="sink" value="double"><span>حوضين</span></label>
+                                <label><input type="radio" name="sink" value="steel"><span>استيل</span></label>
+                                <label><input type="radio" name="sink" value="granite"><span>جرانيت</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- زر الإرسال -->
+                <div class="flex justify-center mt-10">
+                    <button type="button" onclick="alert('سيتم إرسال طلبك قريباً! (ميزة تجريبية)')" class="neu-button !text-brand-accent !px-16 !py-4 text-xl">
+                        إرسال الطلب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- نافذة تسجيل الدخول (عادية وبدون تلميحات) -->
+    <!-- ============================================== -->
+    <div id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" dir="rtl">
+        <div class="neumorphic-card w-full max-w-md p-10 relative border border-white/50">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-500 hover:text-brand-red">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 class="text-3xl font-bold text-[#142e47] mb-8 font-heading text-center">تسجيل الدخول</h3>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[#142e47] font-semibold mb-2">البريد الإلكتروني</label>
+                    <input id="admin-email" type="email" class="neu-input" placeholder="example@domain.com">
+                </div>
+                <div>
+                    <label class="block text-[#142e47] font-semibold mb-2">كلمة المرور</label>
+                    <input id="admin-pass" type="password" class="neu-input" placeholder="أدخل كلمة المرور">
+                </div>
+                <button id="btn-login-submit" onclick="handleLogin()" class="neu-button w-full !text-brand-accent !mt-4 text-xl">
+                    <span id="login-spinner" class="spinner hidden ml-2"></span>دخول
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- نافذة إضافة / تعديل عمل (للمدير) -->
+    <div id="add-work-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" dir="rtl">
+        <div class="neumorphic-card w-full max-w-lg p-10 relative max-h-[90vh] overflow-y-auto border border-white/50">
+            <button onclick="closeAddWorkModal()" class="absolute top-4 right-4 text-gray-500 hover:text-brand-red">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 id="modal-work-title" class="text-2xl font-bold text-[#142e47] mb-6 font-heading border-r-4 border-brand-accent pr-3">إضافة عمل جديد</h3>
+            
+            <div class="space-y-6">
+                <input type="hidden" id="work-edit-id" value="">
+                
+                <div>
+                    <label class="block text-[#142e47] font-semibold mb-2">اسم العمل / المشروع</label>
+                    <input id="work-title" type="text" class="neu-input" placeholder="مثال: مطبخ مودرن">
+                </div>
+                <div>
+                    <label class="block text-[#142e47] font-semibold mb-2">صورة العمل</label>
+                    <label class="neu-upload-btn w-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <span id="upload-status">اختر صورة من جهازك...</span>
+                        <input type="file" id="work-image-input" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
+                    </label>
+                    <div id="image-preview-container" class="mt-4 hidden p-2 bg-[#ebebeb] rounded-2xl shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1)]">
+                        <img id="image-preview" src="" alt="معاينة الصورة" class="w-full h-40 object-cover rounded-xl border-2 border-brand-accent">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[#142e47] font-semibold mb-2">الوصف</label>
+                    <textarea id="work-desc" rows="3" class="neu-input resize-none" placeholder="اكتب وصفاً للعمل..."></textarea>
+                </div>
+                
+                <button id="btn-submit-work" onclick="submitWork()" class="neu-button w-full !text-brand-accent !mt-4 text-lg flex justify-center items-center gap-2">
+                    <span id="btn-text">نشر العمل</span>
+                    <span id="btn-spinner" class="spinner hidden"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- كود فايربيس والجافاسكريبت المحدث -->
+    <!-- ============================================== -->
+    <script>
+        // إعدادات فايربيس الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPsB7EXuAzODim6_Y-wbkaVdm7B1DEur4",
+            authDomain: "vantage-1f026.firebaseapp.com",
+            projectId: "vantage-1f026",
+            storageBucket: "vantage-1f026.firebasestorage.app",
+            messagingSenderId: "179211106937",
+            appId: "1:179211106937:web:5b3926eacefedecf8132a8",
+            measurementId: "G-0XC254KVN7"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let isAdmin = false;
+        let currentCategory = ''; 
+        let editingWorkId = null; 
+        let currentUploadedImageBase64 = ''; 
+
+        // مراقبة حالة تسجيل الدخول
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                isAdmin = true;
+                document.getElementById('login-btn').classList.add('hidden');
+                document.getElementById('logout-btn').classList.remove('hidden');
+                if(!document.getElementById('category-works-view').classList.contains('hidden')) {
+                    document.getElementById('btn-add-work-cat').classList.remove('hidden');
+                    renderWorks();
+                }
+            } else {
+                isAdmin = false;
+                document.getElementById('login-btn').classList.remove('hidden');
+                document.getElementById('logout-btn').classList.add('hidden');
+                document.getElementById('btn-add-work-cat').classList.add('hidden');
+                if(!document.getElementById('category-works-view').classList.contains('hidden')) {
+                    renderWorks(); 
+                }
+            }
+        });
+
+        // دوال التنقل
+        function setActiveNav(element) {
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function openKitchenDesign() {
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('kitchen-view').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function closeKitchenDesign() {
+            document.getElementById('kitchen-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+        }
+
+        function openCategoryView(category, titleStr) {
+            currentCategory = category;
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('category-works-view').classList.remove('hidden');
+            document.getElementById('category-title').innerText = titleStr;
+            if(isAdmin) document.getElementById('btn-add-work-cat').classList.remove('hidden');
+            renderWorks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function closeCategoryView() {
+            document.getElementById('category-works-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+            document.getElementById('btn-add-work-cat').classList.add('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-message');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('hidden', 'toast-exit');
+            toast.classList.add('toast-enter');
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.classList.add('hidden'), 500);
+            }, 3000);
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            if(!email || !pass) { alert('الرجاء إدخال الإيميل وكلمة المرور'); return; }
+
+            const btn = document.getElementById('btn-login-submit');
+            const spinner = document.getElementById('login-spinner');
+            btn.disabled = true; spinner.classList.remove('hidden');
+
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                closeLoginModal();
+                showToast('تم تسجيل الدخول بنجاح.');
+            } catch (error) {
+                alert('خطأ من السيرفر: ' + error.message);
+                console.error(error);
+            } finally {
+                btn.disabled = false; spinner.classList.add('hidden');
+            }
+        }
+
+        function handleLogout() { auth.signOut().then(() => showToast('تم تسجيل الخروج.')); }
+
+        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+        function closeLoginModal() { 
+            document.getElementById('login-modal').classList.add('hidden'); 
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-pass').value = '';
+        }
+
+        function openAddWorkModal() {
+            editingWorkId = null;
+            document.getElementById('modal-work-title').innerText = 'إضافة عمل جديد';
+            document.getElementById('btn-text').innerText = 'نشر العمل';
+            document.getElementById('work-title').value = '';
+            document.getElementById('work-desc').value = '';
+            document.getElementById('upload-status').innerText = 'اختر صورة من جهازك...';
+            document.getElementById('work-image-input').value = '';
+            document.getElementById('image-preview-container').classList.add('hidden');
+            currentUploadedImageBase64 = '';
+            document.getElementById('add-work-modal').classList.remove('hidden');
+        }
+        function closeAddWorkModal() { document.getElementById('add-work-modal').classList.add('hidden'); }
+
+        // أداة ضغط الصور المدمجة
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if(file) {
+                document.getElementById('upload-status').innerText = 'جاري معالجة الصورة...';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('image-preview').src = currentUploadedImageBase64;
+                        document.getElementById('image-preview-container').classList.remove('hidden');
+                        document.getElementById('upload-status').innerText = 'تم ضغط الصورة وإرفاقها بنجاح';
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // جلب الأعمال وترتيبها محلياً
+        async function renderWorks() {
+            const grid = document.getElementById('category-works-grid');
+            grid.innerHTML = '<div class="col-span-full text-center py-20"><span class="spinner inline-block w-8 h-8"></span></div>';
+            
+            try {
+                const snapshot = await db.collection("works").where("category", "==", currentCategory).get();
+                grid.innerHTML = ''; 
+                
+                if(snapshot.empty) {
+                    grid.innerHTML = '<p class="text-gray-500 col-span-full text-center text-lg mt-10 font-heading">لا توجد أعمال منشورة في هذا القسم حالياً.</p>';
+                    return;
+                }
+
+                let worksList = [];
+                snapshot.forEach(doc => { worksList.push({ id: doc.id, ...doc.data() }); });
+
+                worksList.sort((a, b) => {
+                    let timeA = a.createdAt ? a.createdAt.toMillis() : Date.now();
+                    let timeB = b.createdAt ? b.createdAt.toMillis() : Date.now();
+                    return timeB - timeA;
+                });
+
+                worksList.forEach(work => {
+                    const workId = work.id;
+                    let adminControls = '';
+                    if(isAdmin) {
+                        adminControls = `
+                            <div class="absolute top-4 left-4 flex gap-2 z-20">
+                                <button onclick="deleteWork('${workId}', event)" class="neu-btn-small text-brand-red bg-white/90" title="حذف">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                                <button onclick="editWork('${workId}', '${work.title}', '${work.desc}', '${work.img}', event)" class="neu-btn-small text-[#142e47] bg-white/90" title="تعديل">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5m7.5-10.5M5 19h14"></path></svg>
+                                </button>
+                            </div>
+                        `;
+                    }
+
+                    const imgSrc = work.img ? work.img : 'https://placehold.co/400x300/ebebeb/142e47?text=بدون+صورة';
+
+                    const cardHTML = `
+                        <div class="relative neumorphic-card p-4 flex flex-col border border-white/40 group hover-effect cursor-pointer">
+                            ${adminControls}
+                            <img src="${imgSrc}" alt="${work.title}" class="w-full h-56 object-cover rounded-3xl mb-4 shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1)]">
+                            <div class="px-4 pb-4">
+                                <h3 class="text-xl font-bold text-[#142e47] mb-2 font-heading">${work.title}</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">${work.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            } catch (error) {
+                console.error("Error fetching works: ", error);
+                grid.innerHTML = '<p class="text-brand-red col-span-full text-center">حدث خطأ أثناء جلب البيانات. تأكد من إعدادات قاعدة البيانات.</p>';
+            }
+        }
+
+        async function submitWork() {
+            const title = document.getElementById('work-title').value;
+            const desc = document.getElementById('work-desc').value;
+            
+            if(!title || !desc) { alert('الرجاء تعبئة العنوان والوصف.'); return; }
+
+            const btn = document.getElementById('btn-submit-work');
+            const spinner = document.getElementById('btn-spinner');
+            const btnText = document.getElementById('btn-text');
+
+            btn.disabled = true; spinner.classList.remove('hidden'); btnText.innerText = 'جاري النشر...';
+
+            try {
+                if(editingWorkId === null) {
+                    await db.collection("works").add({
+                        category: currentCategory,
+                        title: title,
+                        desc: desc,
+                        img: currentUploadedImageBase64,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast('تم النشر بنجاح!');
+                } else {
+                    const updateData = { title: title, desc: desc };
+                    if(currentUploadedImageBase64 !== "") { updateData.img = currentUploadedImageBase64; }
+                    await db.collection("works").doc(editingWorkId).update(updateData);
+                    showToast('تم التعديل بنجاح!');
+                }
+                closeAddWorkModal();
+                renderWorks();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("حدث خطأ أثناء النشر.");
+            } finally {
+                btn.disabled = false; spinner.classList.add('hidden'); btnText.innerText = 'نشر العمل';
+            }
+        }
+
+        async function deleteWork(id, event) {
+            event.stopPropagation();
+            if(confirm('هل أنت متأكد من رغبتك بحذف هذا العمل نهائياً؟')) {
+                try {
+                    await db.collection("works").doc(id).delete();
+                    showToast('تم الحذف بنجاح!');
+                    renderWorks();
+                } catch(error) { console.error("Error removing document: ", error); }
+            }
+        }
+
+        function editWork(id, title, desc, imgUrl, event) {
+            event.stopPropagation();
+            editingWorkId = id;
+            document.getElementById('modal-work-title').innerText = 'تعديل المنشور';
+            document.getElementById('btn-text').innerText = 'حفظ التعديلات';
+            document.getElementById('work-title').value = title;
+            document.getElementById('work-desc').value = desc;
+            
+            document.getElementById('upload-status').innerText = 'تغيير الصورة (اختياري)';
+            currentUploadedImageBase64 = ''; 
+            
+            if(imgUrl && imgUrl !== 'undefined') {
+                document.getElementById('image-preview').src = imgUrl;
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            } else {
+                document.getElementById('image-preview-container').classList.add('hidden');
+            }
+            
+            document.getElementById('add-work-modal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
