@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200"> <!-- فرض عرض ثابت لضمان مطابقة الهيدر وشريط الأقسام للكمبيوتر -->
     <title>Vantage - Architecture & Design</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -225,13 +225,9 @@
         .neu-img-option input:checked + .content-wrapper { box-shadow: inset 4px 4px 8px #d0d0d0, inset -4px -4px 8px #ffffff; color: #fb5c3a; transform: translateY(0); }
         .neu-img-option img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; border: 2px solid transparent; transition: all 0.3s ease; }
         .neu-img-option input:checked + .content-wrapper img { border-color: #fb5c3a; opacity: 0.9; }
-
-        /* إخفاء شريط التمرير الأفقي لشريط الأقسام في الجوال ليبقى كشريط كمبيوتر متناسق */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-[#ebebeb] text-gray-900 font-arabic min-h-screen relative overflow-x-hidden">
+<body class="bg-[#ebebeb] text-gray-900 font-arabic min-h-screen relative overflow-x-auto" style="min-width: 1200px;">
 
     <div class="bg-pattern-overlay"></div>
 
@@ -243,13 +239,13 @@
 
     <!-- حاوية الصفحة الرئيسية -->
     <div id="main-view">
-        <div class="max-w-[1440px] mx-auto px-4 sm:px-12 pt-6 pb-12 relative z-10" dir="ltr">
+        <div class="max-w-[1440px] mx-auto px-12 pt-6 pb-12 relative z-10" dir="ltr">
             
-            <!-- الهيدر المخصص ليكون بنمط الكمبيوتر حتى في الجوال -->
-            <header class="flex flex-row justify-between items-center pb-6 border-b border-gray-300/60 w-full">
-                <div class="flex items-center gap-4 sm:gap-6 w-1/3 justify-start">
-                    <img src="logo2.png" alt="Vantage Logo" class="h-6 sm:h-7 object-contain">
-                    <div class="relative hidden sm:block w-56">
+            <!-- الهيدر بنمط الكمبيوتر الثابت -->
+            <header class="flex flex-row justify-between items-center pb-6 border-b border-gray-300/60">
+                <div class="flex items-center gap-6 w-1/3 justify-start">
+                    <img src="logo2.png" alt="Vantage Logo" class="h-7 object-contain">
+                    <div class="relative w-56">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
@@ -257,39 +253,39 @@
                     </div>
                 </div>
 
-                <div class="flex w-1/3 justify-center text-xs sm:text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading whitespace-nowrap">
+                <div class="flex w-1/3 justify-center text-sm font-semibold tracking-widest text-gray-800 uppercase font-heading">
                     Beyond Space
                 </div>
 
-                <nav class="flex items-center gap-3 sm:gap-6 w-1/3 justify-end text-xs sm:text-sm font-semibold tracking-widest text-gray-800">
-                    <a href="#" class="hidden lg:block hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
-                    <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-9 sm:!h-10 !px-3 sm:!px-4 !text-xs" dir="rtl">تسجيل الدخول</button>
-                    <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-9 sm:!h-10 !px-3 sm:!px-4 !text-xs hidden !text-brand-red" dir="rtl">خروج</button>
+                <nav class="flex items-center gap-6 w-1/3 justify-end text-sm font-semibold tracking-widest text-gray-800">
+                    <a href="#" class="hover:text-brand-accent transition-colors uppercase font-heading">Architecture</a>
+                    <button id="login-btn" onclick="openLoginModal()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-2" dir="rtl">تسجيل الدخول</button>
+                    <button id="logout-btn" onclick="handleLogout()" class="neu-button !min-w-fit !h-10 !px-4 !text-xs mr-2 hidden !text-brand-red" dir="rtl">تسجيل الخروج</button>
                     <button class="p-1 hover:text-brand-accent rounded-full transition-colors focus:outline-none cursor-pointer">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
+                        <svg class="w-6 h-6 text-gray-800" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
                     </button>
                 </nav>
             </header>
 
-            <main class="mt-16 flex flex-col lg:flex-row items-center relative">
-                <div class="w-full lg:w-5/12 flex items-center relative min-h-[300px] lg:min-h-[500px]">
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 hidden lg:flex items-center z-20">
+            <main class="mt-16 flex flex-row items-center relative">
+                <div class="w-5/12 flex items-center relative min-h-[500px]">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-20">
                         <div class="vertical-text flex flex-row items-center gap-2">
                             <span class="text-xs tracking-[0.4em] text-gray-500 font-medium font-heading">WHERE IDEAS BECOME</span>
                             <span class="text-lg tracking-[0.3em] font-extrabold text-gray-900 ml-2 font-heading">ARCHITECTURE</span>
                         </div>
                     </div>
-                    <div class="w-full flex justify-center lg:pl-12 relative z-10">
+                    <div class="w-full flex justify-center pl-12 relative z-10">
                         <img src="logo.png" alt="Vantage Star" class="w-3/4 max-w-[320px] object-contain drop-shadow-md transform hover:rotate-3 transition-transform duration-700">
                     </div>
                 </div>
-                <div class="w-full lg:w-7/12 relative mt-10 lg:mt-0 flex flex-col items-center lg:items-start">
-                    <div class="absolute top-1/2 -translate-y-1/2 left-0 w-full lg:w-[150%] h-48 lg:h-64 bg-brand-red z-0"></div>
-                    <div class="relative z-10 w-full flex justify-center lg:justify-start lg:pl-10">
+                <div class="w-7/12 relative flex flex-col items-start">
+                    <div class="absolute top-1/2 -translate-y-1/2 left-0 w-[150%] h-64 bg-brand-red z-0"></div>
+                    <div class="relative z-10 w-full flex justify-start pl-10">
                         <img src="hand-ruler.png" alt="Hand with architectural ruler" class="w-full max-w-[450px] object-contain drop-shadow-2xl mix-blend-multiply">
                     </div>
-                    <div class="relative z-10 mt-6 text-center lg:text-left lg:pl-10">
-                        <h1 class="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">We Design Beyond <br/> Boundaries</h1>
+                    <div class="relative z-10 mt-6 text-left pl-10">
+                        <h1 class="text-5xl font-bold text-gray-900 leading-tight">We Design Beyond <br/> Boundaries</h1>
                     </div>
                 </div>
             </main>
@@ -301,14 +297,14 @@
             </div>
         </div>
 
-        <!-- شريط التنقل العلوي Neumorphic (أفقي بنمط الكمبيوتر الدقيق مع إمكانية السحب الأنيق في الشاشات الصغيرة) -->
-        <div class="w-full py-8 lg:py-12 bg-transparent relative z-30 flex flex-col items-center px-4" dir="rtl">
-            <div class="neumorphic-out flex flex-row justify-start lg:justify-center items-center gap-3 lg:gap-4 overflow-x-auto hide-scrollbar w-full lg:w-fit px-4 py-2">
-                <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-lg lg:text-xl shrink-0">ماذا نقدم</a>
-                <a href="#our-works" onclick="setActiveNav(this)" class="nav-btn text-lg lg:text-xl shrink-0">أعمالنا</a>
-                <a href="#your-space" onclick="setActiveNav(this)" class="nav-btn text-lg lg:text-xl text-brand-accent shrink-0">مساحتك</a>
-                <a href="#services" onclick="setActiveNav(this)" class="nav-btn text-lg lg:text-xl shrink-0">الخدمات</a>
-                <a href="#contact" onclick="setActiveNav(this)" class="nav-btn text-lg lg:text-xl shrink-0">تواصل معنا</a>
+        <!-- شريط التنقل العلوي Neumorphic (أفقي تماماً كالكمبيوتر) -->
+        <div class="w-full py-12 bg-transparent relative z-30 flex flex-col items-center" dir="rtl">
+            <div class="neumorphic-out flex flex-row justify-center items-center gap-4 max-w-fit mx-auto">
+                <a href="#what-we-offer" onclick="setActiveNav(this)" class="nav-btn active text-xl">ماذا نقدم</a>
+                <a href="#our-works" onclick="setActiveNav(this)" class="nav-btn text-xl">أعمالنا</a>
+                <a href="#your-space" onclick="setActiveNav(this)" class="nav-btn text-xl text-brand-accent">مساحتك</a>
+                <a href="#services" onclick="setActiveNav(this)" class="nav-btn text-xl">الخدمات</a>
+                <a href="#contact" onclick="setActiveNav(this)" class="nav-btn text-xl">تواصل معنا</a>
             </div>
         </div>
 
@@ -316,29 +312,29 @@
             <img src="what-we-offer.png" alt="ماذا نقدم" class="w-full h-auto block object-cover">
         </section>
 
-        <!-- قسم "أعمالنا" (صندوقين في السطر للجوال) -->
+        <!-- قسم "أعمالنا" -->
         <section id="our-works" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
             <div class="w-full mb-16"><img src="amalna-banner.png" alt="أعمالنا" class="w-full h-auto block object-cover"></div>
-            <div class="max-w-[1440px] mx-auto px-4 sm:px-12">
+            <div class="max-w-[1440px] mx-auto px-12">
                 <div class="text-center mb-8"><p class="text-gray-500 text-lg">اختر القسم لمشاهدة أعمالنا</p></div>
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12 mt-16 pt-12">
-                    <div onclick="openCategoryView('kitchen', 'المطابخ')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-8 text-center border border-white/40">
-                        <div class="absolute -top-10 sm:-top-14 left-1/2 -translate-x-1/2 w-20 sm:w-28 h-20 sm:h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
-                            <img src="kitchen-icon.png" alt="المطابخ" class="w-10 sm:w-16 h-10 sm:h-16 object-contain drop-shadow-md">
+                <div class="grid grid-cols-3 gap-12 mt-16 pt-12">
+                    <div onclick="openCategoryView('kitchen', 'المطابخ')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="kitchen-icon.png" alt="المطابخ" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-[#142e47] mt-2 mb-2 sm:mb-4 font-heading tracking-wide">المطابخ</h3>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">المطابخ</h3>
                     </div>
-                    <div onclick="openCategoryView('living', 'الغرف والمجالس')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-8 text-center border border-white/40">
-                        <div class="absolute -top-10 sm:-top-14 left-1/2 -translate-x-1/2 w-20 sm:w-28 h-20 sm:h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
-                            <img src="living-icon.png" alt="المجالس" class="w-10 sm:w-16 h-10 sm:h-16 object-contain drop-shadow-md">
+                    <div onclick="openCategoryView('living', 'الغرف والمجالس')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="living-icon.png" alt="المجالس" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-[#142e47] mt-2 mb-2 sm:mb-4 font-heading tracking-wide">الغرف والمجالس</h3>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">الغرف والمجالس</h3>
                     </div>
-                    <div onclick="openCategoryView('bedroom', 'غرف النوم')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-16 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-8 text-center border border-white/40 col-span-2 lg:col-span-1">
-                        <div class="absolute -top-10 sm:-top-14 left-1/2 -translate-x-1/2 w-20 sm:w-28 h-20 sm:h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
-                            <img src="bedroom-icon.png" alt="غرف النوم" class="w-10 sm:w-16 h-10 sm:h-16 object-contain drop-shadow-md">
+                    <div onclick="openCategoryView('bedroom', 'غرف النوم')" class="relative group cursor-pointer neumorphic-card hover-effect w-full max-w-[340px] mx-auto pt-20 pb-10 px-8 text-center border border-white/40">
+                        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full icon-circle flex items-center justify-center transition-transform duration-500 group-hover:scale-110 z-10 border-4 border-[#ebebeb]">
+                            <img src="bedroom-icon.png" alt="غرف النوم" class="w-16 h-16 object-contain drop-shadow-md transition-transform duration-500 group-hover:rotate-6">
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-[#142e47] mt-2 mb-2 sm:mb-4 font-heading tracking-wide">غرف النوم</h3>
+                        <h3 class="text-2xl font-bold text-[#142e47] mt-2 mb-4 font-heading tracking-wide">غرف النوم</h3>
                     </div>
                 </div>
             </div>
@@ -350,28 +346,28 @@
             </div>
         </div>
 
-        <!-- قسم مساحتك (صندوقين في السطر للجوال) -->
+        <!-- قسم مساحتك -->
         <section id="your-space" class="w-full bg-[#ebebeb] py-20 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
-            <div class="max-w-[1200px] mx-auto px-4 sm:px-12 text-center">
-                <h2 class="text-4xl sm:text-5xl font-bold text-[#142e47] mb-6 font-heading tracking-wide">مساحتك</h2>
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-                    <button onclick="openKitchenDesign()" class="neumorphic-card hover-effect py-8 sm:py-10 px-4 sm:px-6 flex flex-col items-center justify-center gap-4 group">
-                        <div class="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
-                            <svg class="w-8 sm:w-10 h-8 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <div class="max-w-[1200px] mx-auto px-12 text-center">
+                <h2 class="text-5xl font-bold text-[#142e47] mb-6 font-heading tracking-wide">مساحتك</h2>
+                <div class="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <button onclick="openKitchenDesign()" class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مطبخ</span>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مطبخ</span>
                     </button>
-                    <button class="neumorphic-card hover-effect py-8 sm:py-10 px-4 sm:px-6 flex flex-col items-center justify-center gap-4 group">
-                        <div class="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
-                            <svg class="w-8 sm:w-10 h-8 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <button class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">غرفة نوم</span>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم غرفة نوم</span>
                     </button>
-                    <button class="neumorphic-card hover-effect py-8 sm:py-10 px-4 sm:px-6 flex flex-col items-center justify-center gap-4 group col-span-2 lg:col-span-1 max-w-[340px] mx-auto w-full">
-                        <div class="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
-                            <svg class="w-8 sm:w-10 h-8 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <button class="neumorphic-card hover-effect py-10 px-6 flex flex-col items-center justify-center gap-4 group">
+                        <div class="w-20 h-20 rounded-full bg-[#ebebeb] shadow-[inset_4px_4px_8px_#d0d0d0,inset_-4px_-4px_8px_#ffffff] flex items-center justify-center group-hover:text-brand-accent transition-colors">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مجلس</span>
+                        <span class="text-xl font-bold text-[#142e47] font-heading group-hover:text-brand-accent">تصميم مجلس</span>
                     </button>
                 </div>
             </div>
@@ -379,8 +375,8 @@
 
         <!-- الخدمات -->
         <section id="services" class="w-full bg-[#ebebeb] py-16 relative z-20 overflow-hidden scroll-mt-10" dir="rtl">
-            <div class="max-w-[1440px] mx-auto px-4 sm:px-12 text-center mb-12"><h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">خدماتنا الهندسية</h2></div>
-            <div class="max-w-[1440px] mx-auto px-4 sm:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="max-w-[1440px] mx-auto px-12 text-center mb-12"><h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">خدماتنا الهندسية</h2></div>
+            <div class="max-w-[1440px] mx-auto px-12 grid grid-cols-4 gap-8">
                 <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التصميم المعماري</h3><p class="text-gray-600 text-sm leading-relaxed">ابتكار تصاميم فريدة تلبي احتياجات العميل مع الحفاظ على الهوية العمرانية.</p></div>
                 <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التصميم الداخلي</h3><p class="text-gray-600 text-sm leading-relaxed">توزيع الفراغات وتنسيق الأثاث والألوان لخلق بيئة مريحة وجمالية.</p></div>
                 <div class="p-6 neumorphic-card border border-transparent"><h3 class="text-xl font-bold text-[#142e47] mb-3 font-heading">التخطيط الحضري</h3><p class="text-gray-600 text-sm leading-relaxed">تخطيط المدن والأحياء السكنية بما يضمن كفاءة البنية التحتية.</p></div>
@@ -390,9 +386,9 @@
 
         <!-- الفوتر -->
         <footer id="contact" class="w-full bg-[#0b1724] text-white py-16 relative z-30 border-t border-gray-800 scroll-mt-10" dir="rtl">
-            <div class="max-w-[1440px] mx-auto px-4 sm:px-12 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center text-center lg:text-right">
+            <div class="max-w-[1440px] mx-auto px-12 grid grid-cols-3 gap-12 items-center text-right">
                 <div>
-                    <img src="logo2.png" alt="Vantage Logo" class="h-8 object-contain mb-4 mx-auto lg:mx-0 brightness-0 invert">
+                    <img src="logo2.png" alt="Vantage Logo" class="h-8 object-contain mb-4 brightness-0 invert">
                     <p class="text-gray-400 text-sm leading-relaxed">جميع حقوق الملكية الفكرية والتصميمية محفوظة لشركة فانتج للهندسة والتصميم المعماري © 2026.</p>
                 </div>
                 <div>
@@ -403,7 +399,7 @@
                 </div>
                 <div>
                     <h4 class="text-lg font-bold mb-4 text-white font-heading">تابعنا على منصات التواصل</h4>
-                    <div class="flex justify-center lg:justify-start gap-4">
+                    <div class="flex gap-4">
                         <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-red flex items-center justify-center transition-colors">
                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
                         </a>
@@ -417,8 +413,8 @@
     </div>
 
     <!-- نافذة الأقسام -->
-    <div id="category-works-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl">
-        <div class="max-w-[1440px] mx-auto px-4 sm:px-12">
+    <div id="category-works-view" class="hidden min-h-screen relative z-50 py-12" dir="rtl" style="min-width: 1200px;">
+        <div class="max-w-[1440px] mx-auto px-12">
             <div class="flex justify-between items-center mb-10">
                 <button onclick="closeCategoryView()" class="neu-button text-[#142e47] px-6 py-3 text-sm">العودة</button>
                 <button id="btn-add-work-cat" onclick="openAddWorkModal()" class="neu-button hidden !text-brand-accent px-6 py-3 text-sm">إضافة عمل جديد</button>
@@ -426,15 +422,15 @@
             <div class="text-center mb-12 border-b-2 border-brand-accent inline-block pb-4 mx-auto w-full max-w-sm">
                 <h2 id="category-title" class="text-4xl font-bold text-[#142e47] font-heading">أعمالنا</h2>
             </div>
-            <div id="category-works-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div id="category-works-grid" class="grid grid-cols-3 gap-10">
                 <div class="col-span-full text-center py-20"><span class="spinner inline-block w-8 h-8"></span></div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تصميم المطبخ (مكتملة بجميع الأسئلة والمراحل الخمس) -->
-    <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12 bg-[#ebebeb]" dir="rtl">
-        <div class="max-w-[1000px] mx-auto px-4 sm:px-6">
+    <!-- نافذة تصميم المطبخ -->
+    <div id="kitchen-view" class="hidden min-h-screen relative z-50 py-12 bg-[#ebebeb]" dir="rtl" style="min-width: 1200px;">
+        <div class="max-w-[1000px] mx-auto px-6">
             <div class="mb-10"><button onclick="closeKitchenDesign()" class="neu-button text-[#142e47] px-6 py-3 text-sm">العودة للرئيسية</button></div>
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-[#142e47] mb-4 font-heading">متطلبات تصميم مطبخك</h2>
@@ -442,27 +438,26 @@
             </div>
             
             <form class="space-y-16 pb-20">
-                <!-- المرحلة الأولى -->
-                <div class="neumorphic-card p-6 sm:p-10">
-                    <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الأولى: معلومات المساحة والتخطيط</h3>
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الأولى: معلومات المساحة والتخطيط</h3>
                     <div class="space-y-8">
                         <div>
                             <label class="block text-[#142e47] font-semibold mb-4">أبعاد المطبخ التقريبية</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-2 gap-6">
                                 <input type="number" placeholder="الطول (بالمتر)" class="neu-input">
                                 <input type="number" placeholder="العرض (بالمتر)" class="neu-input">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[#142e47] font-semibold mb-4">نوع المطبخ معمارياً</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 neu-option">
+                            <div class="grid grid-cols-2 gap-4 neu-option">
                                 <label><input type="radio" name="kitchen_type" value="open"><span>مفتوح على الصالة</span></label>
                                 <label><input type="radio" name="kitchen_type" value="closed"><span>مساحة مغلقة ومستقلة</span></label>
                             </div>
                         </div>
                         <div>
                             <label class="block text-[#142e47] font-semibold mb-4">التوزيع والشكل المفضل</label>
-                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 neu-img-option text-sm">
+                            <div class="grid grid-cols-4 gap-4 neu-img-option text-sm">
                                 <label><input type="radio" name="kitchen_layout" value="L"><div class="content-wrapper"><img src="5ad301d4665ce9039aaeb4639157457e.jpg"><span>مطبخ حرف L</span></div></label>
                                 <label><input type="radio" name="kitchen_layout" value="U"><div class="content-wrapper"><img src="0a1b63ea8e360ffc24a902a94ea0a32c.jpg"><span>مطبخ حرف U</span></div></label>
                                 <label><input type="radio" name="kitchen_layout" value="straight"><div class="content-wrapper"><img src="e4bd5ee3eab8c5aae2e7d36f48f831a5.jpg"><span>خط مستقيم</span></div></label>
@@ -472,107 +467,17 @@
                     </div>
                 </div>
 
-                <!-- المرحلة الثانية -->
-                <div class="neumorphic-card p-6 sm:p-10">
-                    <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثانية: النمط الجمالي</h3>
+                <div class="neumorphic-card p-10">
+                    <h3 class="text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثانية: النمط الجمالي</h3>
                     <div class="space-y-8">
                         <div>
                             <label class="block text-[#142e47] font-semibold mb-4">طراز التصميم المفضل</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 neu-option text-sm">
+                            <div class="grid grid-cols-5 gap-4 neu-option text-sm">
                                 <label><input type="radio" name="style" value="modern"><span>مودرن</span></label>
                                 <label><input type="radio" name="style" value="classic"><span>كلاسيك</span></label>
                                 <label><input type="radio" name="style" value="neoclassic"><span>نيوكلاسيك</span></label>
                                 <label><input type="radio" name="style" value="industrial"><span>صناعي</span></label>
                                 <label><input type="radio" name="style" value="rustic"><span>ريفي</span></label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">الألوان المفضلة للدواليب</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="color" value="light"><span>فاتحة</span></label>
-                                <label><input type="radio" name="color" value="dark"><span>داكنة</span></label>
-                                <label><input type="radio" name="color" value="mixed"><span>دمج لونين</span></label>
-                                <label><input type="radio" name="color" value="custom"><span>تحديد لون خاص</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- المرحلة الثالثة -->
-                <div class="neumorphic-card p-6 sm:p-10">
-                    <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الثالثة: الخامات والتشطيبات الأساسية</h3>
-                    <div class="space-y-8">
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">نوع الصاج (للدرف الخارجية)</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="saj" value="normal"><span>ألمنيوم عادي</span></label>
-                                <label><input type="radio" name="saj" value="double"><span>صاج دبل</span></label>
-                                <label><input type="radio" name="saj" value="cladding"><span>كلادينج</span></label>
-                                <label><input type="radio" name="saj" value="wood"><span>شرائح خشابي</span></label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">نوع الفيبر وشكله</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="fiber" value="plain"><span>سادة</span></label>
-                                <label><input type="radio" name="fiber" value="pattern"><span>منقوش/محفور</span></label>
-                                <label><input type="radio" name="fiber" value="glossy"><span>لامع Glossy</span></label>
-                                <label><input type="radio" name="fiber" value="matte"><span>مطفي Matte</span></label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">نوع الرخام (أسطح العمل)</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="marble" value="natural"><span>طبيعي</span></label>
-                                <label><input type="radio" name="marble" value="granite"><span>جرانيت</span></label>
-                                <label><input type="radio" name="marble" value="quartz"><span>كوارتز</span></label>
-                                <label><input type="radio" name="marble" value="porcelain"><span>بورسلان</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- المرحلة الرابعة -->
-                <div class="neumorphic-card p-6 sm:p-10">
-                    <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الرابعة: الإكسسوارات والوظائف العملية</h3>
-                    <div class="space-y-8">
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">نظام المقابض</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="handles" value="visible"><span>مقابض بارزة</span></label>
-                                <label><input type="radio" name="handles" value="hidden"><span>مخفية Profile</span></label>
-                                <label><input type="radio" name="handles" value="push"><span>نظام الضغط Push</span></label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">حلول التخزين الذكية</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 neu-option text-sm">
-                                <label><input type="checkbox" name="storage1"><span>منظمات أدراج</span></label>
-                                <label><input type="checkbox" name="storage2"><span>زاوية سحرية</span></label>
-                                <label><input type="checkbox" name="storage3"><span>دواليب المؤن Pantry</span></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- المرحلة الخامسة -->
-                <div class="neumorphic-card p-6 sm:p-10">
-                    <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 border-r-4 border-[#142e47] pr-4 font-heading">المرحلة الخامسة: الأجهزة الكهربائية والتمديدات</h3>
-                    <div class="space-y-8">
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">طبيعة الأجهزة الكهربائية</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="app_type" value="builtin"><span>مدمجة (Built-in)</span></label>
-                                <label><input type="radio" name="app_type" value="free"><span>منفصلة (Freestanding)</span></label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[#142e47] font-semibold mb-4">نوع حوض الغسيل (المجلى)</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 neu-option text-sm">
-                                <label><input type="radio" name="sink" value="single"><span>حوض واحد واسع</span></label>
-                                <label><input type="radio" name="sink" value="double"><span>حوضين</span></label>
-                                <label><input type="radio" name="sink" value="steel"><span>استيل</span></label>
-                                <label><input type="radio" name="sink" value="granite"><span>جرانيت</span></label>
                             </div>
                         </div>
                     </div>
@@ -663,7 +568,6 @@
         function openKitchenDesign() {
             document.getElementById('main-view').classList.add('hidden');
             document.getElementById('kitchen-view').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function closeKitchenDesign() {
             document.getElementById('kitchen-view').classList.add('hidden');
@@ -677,7 +581,6 @@
             document.getElementById('category-title').innerText = titleStr;
             if(isAdmin) document.getElementById('btn-add-work-cat').classList.remove('hidden');
             renderWorks();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function closeCategoryView() {
             document.getElementById('category-works-view').classList.add('hidden');
